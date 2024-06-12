@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 from decouple import config
 
+from datetime import timedelta
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -156,6 +158,11 @@ REST_FRAMEWORK = {
 
 # CORS Headers configuration
 CORS_ALLOW_ALL_ORIGINS = True
+
+# Simple JWT Configuration
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10),
+}
 
 # Using console based Email, instead of Gmail SMTP Service
 # EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
