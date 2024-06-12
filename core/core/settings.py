@@ -156,3 +156,14 @@ REST_FRAMEWORK = {
 
 # CORS Headers configuration
 CORS_ALLOW_ALL_ORIGINS = True
+
+# Using console based Email, instead of Gmail SMTP Service
+# EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+# SMTP service configuration for sending emails
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp4dev"  # Docker compose service name (instead of 'localhost')
+EMAIL_PORT = 25
+EMAIL_USE_TLS = False
+EMAIL_HOST_USER = ""
+EMAIL_HOST_PASSWORD = ""
