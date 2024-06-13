@@ -14,8 +14,9 @@ import os
 
 from pathlib import Path
 from decouple import config
-
 from datetime import timedelta
+
+from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -147,6 +148,9 @@ STATICFILES_DIRS = [BASE_DIR / "statics"]
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Successful login redirection configuration (in case next parameter is not specified)
+LOGIN_REDIRECT_URL = reverse_lazy("blog:index")
 
 # REST Framework global configuration
 REST_FRAMEWORK = {
