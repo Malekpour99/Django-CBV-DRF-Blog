@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "accounts",
+    "blog",
     "corsheaders",
     "rest_framework",
     "rest_framework.authtoken",
@@ -148,6 +150,9 @@ STATICFILES_DIRS = [BASE_DIR / "statics"]
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# User Manager Configuration
+AUTH_USER_MODEL = "accounts.User"
 
 # Successful login redirection configuration (in case next parameter is not specified)
 LOGIN_REDIRECT_URL = reverse_lazy("blog:index")
