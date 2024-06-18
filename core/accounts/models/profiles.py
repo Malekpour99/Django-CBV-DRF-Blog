@@ -8,7 +8,9 @@ class Profile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=250)
     last_name = models.CharField(max_length=250)
-    image = models.ImageField(upload_to="accounts/", null=True, blank=True)
+    image = models.ImageField(
+        upload_to="accounts/", default="accounts/anonymous-person.jpg"
+    )
     bio = models.TextField(blank=True, null=True)
 
     def __str__(self):
