@@ -2,3 +2,9 @@
     max-width: 475px;
     margin: 0 auto;
   }
+
+  .bg-cover {
+    background-size: contain !important;
+    background-position: center;
+    background-repeat: no-repeat;
+}
