@@ -1,11 +1,13 @@
-from django.shortcuts import render
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView
+from blog.models import Post
 
-from django.views.generic import TemplateView
 
-
-class IndexView(TemplateView):
+class PostListView(ListView):
     """
-    Renders index page of the blog
+    Showing a list of published posts
     """
 
     template_name = "blog/index.html"
+    queryset = Post.objects.select_related("author").filter(published_status=True)
+    context_object_name = "posts"
