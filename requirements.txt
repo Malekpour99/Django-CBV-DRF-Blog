@@ -14,6 +14,9 @@ django-cors-headers
 # Deployment
 gunicorn
 
+# PostgreSQL
+psycopg2-binary
+
 # Email templates
 django-mail-templated
 
