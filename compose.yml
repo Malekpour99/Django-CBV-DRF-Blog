@@ -9,6 +9,20 @@ services:
         published: 6379
         protocol: tcp
 
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - mode: ingress
+        target: 5432
+        published: 5432
+        protocol: tcp
+
   backend:
     build: .
     command: >
@@ -26,11 +40,16 @@ services:
           create_host_path: true
     depends_on:
       - redis
+      - postgres
     environment:
       SECRET_KEY: ${SECRET_KEY}
       DEBUG: ${DEBUG}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
 
-  # Celery Worker
   worker:
     build: .
     command: celery -A core worker -l INFO
@@ -43,6 +62,7 @@ services:
     depends_on:
       - redis
       - backend
+      - postgres
 
   smtp4dev:
     image: rnwood/smtp4dev:v3
@@ -62,3 +82,4 @@ services:
 
 volumes:
   smtp4dev-data:
+  postgres-data:
