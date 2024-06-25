@@ -106,13 +106,13 @@ WSGI_APPLICATION = "core.wsgi.application"
 
 # PostgreSQL database configuration
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME', 'todo_db'),
-        'USER': config('DB_USER', 'tasks_admin'),
-        'PASSWORD': config('DB_PASSWORD', 'todo_password'),
-        'HOST': config('DB_HOST', 'postgres'),
-        'PORT': config('DB_PORT', '5432'),
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": config("DB_NAME", default="blog_db"),
+        "USER": config("DB_USER", default="blog_admin"),
+        "PASSWORD": config("DB_PASSWORD", default="blog_admin_password"),
+        "HOST": config("DB_HOST", default="postgres"),  # compose service name
+        "PORT": config("DB_PORT", cast=str, default="5432"),
     }
 }
 
