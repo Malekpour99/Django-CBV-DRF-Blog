@@ -10,7 +10,7 @@ services:
         protocol: tcp
 
   postgres:
-    image: postgres:13
+    image: postgres
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
