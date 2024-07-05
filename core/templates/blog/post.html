@@ -18,6 +18,9 @@
               <a href="#!">{{ post.author.username }}</a>
               on {{ post.published_at }}
             </span>
+            <a href="{% url 'blog:category' cat_slug=post.category.slug %}" class="btn btn-sm btn-outline-light p-3 mt-3 rounded-pill">
+              {{ post.category.name }}
+            </a>
           </div>
         </div>
       </div>
