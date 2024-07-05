@@ -18,7 +18,7 @@ class Category(BaseModel):
 
     def save(self, *args, **kwargs):
         # ensuring names uniqueness for any database
-        self.name = self.name.lower()
+        self.name = self.name.lower().strip()
         if not self.slug:
             self.slug = slugify(self.name)
         if Category.objects.filter(slug=self.slug).exists():
