@@ -26,17 +26,24 @@
           <!-- Post preview -->
           <div class="row">
             <div class="col-3 d-flex align-items-center justify-content-center">
-              <img src="{{ post.image.url }}" alt="{{ post.title }}" class="img-fluid w-100" />
+              <a href="{% url 'blog:post-detail' post.slug %}">
+                <img src="{{ post.image.url }}" alt="{{ post.title }}" class="img-fluid w-100 fit-image" />
+              </a>
             </div>
             <div class="post-preview col-9">
-              <a href="post.html">
+              <a href="{% url 'blog:post-detail' post.slug %}">
                 <h2 class="post-title">{{ post.title|title }}</h2>
-                <h3 class="post-subtitle">{{ post.content|truncatewords:20 }}</h3>
+                <h3 class="post-subtitle">{{ post.content|truncatewords:15 }}</h3>
               </a>
               <p class="post-meta">
                 Posted by
-                <a href="#!">{{ post.author.username }}</a>
+                <a href="{% url 'blog:author' author_username=post.author.username %}">{{ post.author.username }}</a>
                 on {{ post.published_at|date:'d M Y' }}
+                
+                {% if post.category %}
+                <a href="{% url 'blog:category' cat_slug=post.category.slug %}" class="badge rounded-pill text-bg-secondary">{{ post.category.name }}</a>
+                {% endif %}
+                  
               </p>
             </div>
           </div>

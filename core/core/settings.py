@@ -141,7 +141,12 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+# TIME_ZONE = "UTC" # Default time zone
+
+TIME_ZONE = 'Asia/Tehran'
+# Making datetimes time zone aware
+USE_TZ = True
+
 
 USE_I18N = True
 
