@@ -15,12 +15,14 @@
             <h1>{{ post.title|title }}</h1>
             <span class="meta">
               Posted by
-              <a href="#!">{{ post.author.username }}</a>
+              <a href="{% url 'blog:author' author_username=post.author.username %}">{{ post.author.username }}</a>
               on {{ post.published_at }}
             </span>
-            <a href="{% url 'blog:category' cat_slug=post.category.slug %}" class="btn btn-sm btn-outline-light p-3 mt-3 rounded-pill">
-              {{ post.category.name }}
-            </a>
+            {% if post.category %}
+              <a href="{% url 'blog:category' cat_slug=post.category.slug %}" class="btn btn-sm btn-outline-light p-3 mt-3 rounded-pill">
+                {{ post.category.name }}
+              </a>            
+            {% endif %}
           </div>
         </div>
       </div>
