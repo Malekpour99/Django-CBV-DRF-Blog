@@ -23,6 +23,8 @@ class PostListView(ListView):
         )
         if self.kwargs.get("cat_slug"):
             posts = posts.filter(category__slug=self.kwargs["cat_slug"])
+        if self.kwargs.get("author_username"):
+            posts = posts.filter(author__username=self.kwargs["author_username"])
         return posts
 
 
