@@ -15,7 +15,7 @@ class Post(BaseModel):
     content = models.TextField()
     slug = models.SlugField(max_length=255, unique=True)
     category = models.ForeignKey(
-        Category, null=True, blank=True, on_delete=models.SET_NULL, related_name="posts"
+        Category, on_delete=models.SET_NULL, related_name="posts"
     )
     counted_views = models.IntegerField(default=0)
     published_status = models.BooleanField(default=False)
