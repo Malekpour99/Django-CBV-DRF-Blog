@@ -39,6 +39,7 @@
                 Posted by
                 <a href="#!">{{ post.author.username }}</a>
                 on {{ post.published_at|date:'d M Y' }}
+                <a href="{% url 'blog:category' cat_slug=post.category.slug %}" class="badge rounded-pill text-bg-secondary">{{ post.category.name }}</a>
               </p>
             </div>
           </div>
