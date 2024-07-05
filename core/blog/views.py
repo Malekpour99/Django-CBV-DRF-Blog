@@ -1,5 +1,9 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from typing import Any
+
+from django.utils import timezone
+from django.db.models.query import QuerySet
 from django.views.generic import ListView, DetailView
+
 from blog.models import Post
 
 
@@ -9,8 +13,17 @@ class PostListView(ListView):
     """
 
     template_name = "blog/index.html"
-    queryset = Post.objects.select_related("author").filter(published_status=True)
     context_object_name = "posts"
+
+    def get_queryset(self) -> QuerySet[Any]:
+        posts = (
+            Post.objects.select_related("author")
+            .filter(published_status=True, published_at__lte=timezone.now())
+            .order_by("-published_at")
+        )
+        if self.kwargs.get("cat_slug"):
+            posts = posts.filter(category__slug=self.kwargs["cat_slug"])
+        return posts
 
 
 class PostDetailView(DetailView):
