@@ -32,17 +32,21 @@ class PostListView(ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
+        is_home = True
+        
         if self.kwargs.get("cat_slug"):
             category = self.kwargs["cat_slug"]
             page_title = f"Posts in '{category.capitalize()}' category"
+            is_home = False
         elif self.kwargs.get("author_username"):
             author = self.kwargs["author_username"]
             page_title = f"Posts by '{author.capitalize()}'"
+            is_home = False
         else:
             page_title = "Recent Posts"
 
         context["page_title"] = page_title
+        context["is_home"] = is_home
 
         return context
 
@@ -70,5 +74,6 @@ class SearchView(View):
         context = {
             "page_title": page_title,
             "posts": posts,
+            "is_home": False,
         }
         return render(request, "blog/index.html", context)
