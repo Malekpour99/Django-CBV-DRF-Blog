@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block header_content %}
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url({% static 'img/publish-bg.jpg' %})">
+    <div class="container position-relative px-4 px-lg-5">
+      <div class="row gx-4 gx-lg-5 justify-content-center">
+        <div class="col-md-10 col-lg-8 col-xl-7">
+          <div class="site-heading">
+            <h1>Ink Impressions</h1>
+            <span class="subheading">A Blog For Special Tastes</span>
+            <!-- Page Title -->
+            <h3 class="d-inline-block bg-secondary rounded-pill p-4 mt-4">
+              <i class="bi bi-arrow-down-circle"></i>
+              {{ page_title|title }}
+            </h3>
+
+            <!-- Return link to blog index page -->
+            <a href="{% url 'blog:index' %}" class="btn btn-outline-light mt-4 rounded fs-4"><i class="bi bi-arrow-left"></i> Return to Recent Posts</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+{% endblock %}
+
+{% block main_content %}
+  <!-- Main Content -->
+  <div class="container px-4 px-lg-5">
+    <div class="row gx-2 gx-lg-3 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <!-- Publish new post form -->
+        <div class="row">
+          <div class="col-12 mb-4">
+
+            {% include "includes/form-errors.html" %}
+
+            <form class="form-control p-3" method="post" action="{% url 'blog:post-publish' %}" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div class="mb-3">
+                <label for="post-image" class="form-label">Image</label>
+                <input type="file" class="form-control" id="post-image" name="image" required/>
+              </div>
+              <div class="mb-3">
+                <label for="post-title" class="form-label">Title</label>
+                <input type="text" class="form-control" id="post-title" name="title" required/>
+              </div>
+              <div class="mb-3">
+                <label for="post-content" class="form-label">Content</label>
+                <textarea type="text" class="form-control" id="post-content" name="content" style="height: 150px" required></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="post-publish-date" class="form-label">Publish Date</label>
+                <input type="date" class="form-control" id="post-publish-date" name="published_at" required>
+                <span class="form-text">
+                  This date will be updated when your post is approved to be published!
+                </span>
+                <div class="col">
+                </div>
+              </div>
+              <div class="mb-2">
+                <label for="post-category" class="form-label">Category</label>
+                <select class="form-select" id="post-category" name="category" required>
+                  <option selected disabled>---</option>
+                  {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <p class="fs-6 mt-1 mb-3">Can't find your desired category, create it from 
+                <span 
+                  class="btn rounded-pill text-bg-secondary p-1" 
+                  id="id-suggestor"
+                  data-bs-toggle="modal" 
+                  data-bs-target="#categoryModal"
+                  >here</span>!
+              </p>
+              <div class="mb-3 d-flex flex-row-reverse">
+                <button class="btn btn-primary rounded-2" type="submit">Publish</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <!-- End of publish new post form -->
+      </div>
+    </div>
+  </div>
+
+<!-- The category creation modal -->
+<div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Create a new category</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <!-- category form submission errors will be displayed here -->
+        <p id="error-message" class="text-danger px-3 my-1"></p>
+
+        <form class="p-3" id="categoryForm">
+          <label class="form-label" for="categoryInput">Category Name:</label>
+          <input class="form-control form-control-lg" type="text" id="categoryInput" name="name" required>
+          <div class="mt-3 d-flex flex-row-reverse">
+            <button type="submit" class="btn p-3 btn-primary rounded-3">Create</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  // Get the modal
+  let modal = document.getElementById("categoryModal");
+  let errorMessage = document.getElementById("error-message");
+
+  // Handle form submission
+  document.getElementById("categoryForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      let category = document.getElementById("categoryInput").value;      
+      let url = "{% url 'blog:category-publish' %}";
+      let csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+       fetch(url, {
+           method: 'POST',
+           headers: {
+               'Content-Type': 'application/json',
+               'X-CSRFToken': csrfToken
+           },
+           body: JSON.stringify({ name: category })
+       })
+       .then(response => {
+        if (!response.ok) {
+            return response.json().then(errorData => {
+                throw new Error(errorData.error);
+            });
+        }
+        return response.json();
+    })
+    .then(data => {
+        $(modal).modal('hide'); // Hide the modal on success
+        errorMessage.innerText = "";  // Clear any previous error messages
+    })
+    .catch(error => {
+        errorMessage.innerText = error.message; // Display error message
+    });
+  });
+
+  // date picker scripts
+  document.addEventListener('DOMContentLoaded', function() {
+    flatpickr("#post-publish-date", {
+      altInput: true,
+      altFormat: "F j, Y",
+      dateFormat: "Y-m-d",
+      minDate: "today",
+      defaultDate: "today"
+    });
+  });
+</script>
+
+{% endblock %}
