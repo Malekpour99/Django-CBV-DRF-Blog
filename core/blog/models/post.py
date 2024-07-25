@@ -9,7 +9,7 @@ from .category import Category
 
 
 class Post(BaseModel):
-    image = models.ImageField(upload_to="blog/", default="blog/default-post.png")
+    image = models.ImageField(upload_to="blog/", default="default/default-post.png")
     author = models.ForeignKey("accounts.profile", on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     content = models.TextField()
