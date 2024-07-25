@@ -26,7 +26,7 @@ class Post(BaseModel):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.name)
+            self.slug = slugify(self.title)
             if Post.objects.filter(slug=self.slug).exists():
                 self.slug = f"{self.slug}-{uuid.uuid4().hex[:8]}"
         super().save(*args, **kwargs)
