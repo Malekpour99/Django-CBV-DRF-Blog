@@ -1,13 +1,16 @@
+import json
 from typing import Any
 
 from django.db.models import Q
 from django.utils import timezone
+from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.shortcuts import render
 from django.db.models.query import QuerySet
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View, ListView, DetailView, CreateView
 
+from rest_framework import status
 
 from blog.models import Post, Category
 
@@ -112,3 +115,31 @@ class PostPublishView(LoginRequiredMixin, CreateView):
 
         return context
 
+
+class CategoryPublishView(LoginRequiredMixin, View):
+    """
+    Provides a form for users to create a new category
+    """
+    
+    def post(self, request, *args, **kwargs):
+        try:
+            data = json.loads(request.body)
+            category_name = data.get('name')
+            
+            if not category_name:
+                return JsonResponse({'error': 'Category name is required'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Check if category already exists
+            if Category.objects.filter(name=category_name).exists():
+                return JsonResponse({'error': 'Category already exists'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Create new category
+            category = Category.objects.create(name=category_name)
+            
+            return JsonResponse({'success': True, 'category_id': category.id})
+        
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON'}, status=status.HTTP_400_BAD_REQUEST)
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
