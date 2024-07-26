@@ -92,13 +92,7 @@ class PostPublishView(LoginRequiredMixin, CreateView):
 
     template_name = "blog/post_publish.html"
     model = Post
-    fields = [
-        "image",
-        "title",
-        "content",
-        "category",
-        "published_at"
-    ]
+    fields = ["image", "title", "content", "category", "published_at"]
     success_url = reverse_lazy("blog:index")
 
     def form_valid(self, form):
@@ -120,26 +114,42 @@ class CategoryPublishView(LoginRequiredMixin, View):
     """
     Provides a form for users to create a new category
     """
-    
+
     def post(self, request, *args, **kwargs):
         try:
             data = json.loads(request.body)
-            category_name = data.get('name')
-            
+            category_name = data.get("name")
+
             if not category_name:
-                return JsonResponse({'error': 'Category name is required'}, status=status.HTTP_400_BAD_REQUEST)
-            
+                return JsonResponse(
+                    {"error": "Category name is required"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
             # Check if category already exists
             if Category.objects.filter(name=category_name).exists():
-                return JsonResponse({'error': 'Category already exists'}, status=status.HTTP_400_BAD_REQUEST)
-            
+                return JsonResponse(
+                    {"error": f"'{category_name}' category already exists!"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
             # Create new category
             category = Category.objects.create(name=category_name)
-            
-            return JsonResponse({'success': True, 'category_id': category.id})
-        
+
+            return JsonResponse(
+                {
+                    "success": True,
+                    "category_id": category.id,
+                    "category_name": category.name,
+                }
+            )
+
         except json.JSONDecodeError:
-            return JsonResponse({'error': 'Invalid JSON'}, status=status.HTTP_400_BAD_REQUEST)
+            return JsonResponse(
+                {"error": "Invalid JSON"}, status=status.HTTP_400_BAD_REQUEST
+            )
 
         except Exception as e:
-            return JsonResponse({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return JsonResponse(
+                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
