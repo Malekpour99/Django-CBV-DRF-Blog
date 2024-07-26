@@ -112,11 +112,11 @@
   </div>
 </div>
 
-
 <script>
   // Get the modal
   let modal = document.getElementById("categoryModal");
   let errorMessage = document.getElementById("error-message");
+  let categorySelect = document.getElementById("post-category");
 
   // Handle form submission
   document.getElementById("categoryForm").addEventListener("submit", function(event) {
@@ -143,11 +143,26 @@
         return response.json();
     })
     .then(data => {
-        $(modal).modal('hide'); // Hide the modal on success
-        errorMessage.innerText = "";  // Clear any previous error messages
+        // Create a new option element
+        let newOption = document.createElement("option");
+        newOption.value = data.category_id;
+        newOption.text = data.category_name;
+
+        // Append the new option to the select element
+        categorySelect.appendChild(newOption);
+
+        // select the newly added category (better UX)
+        newOption.selected = true;
+
+        // Hide the modal on success
+        $(modal).modal('hide');
+
+        // Clear any previous error messages
+        errorMessage.innerText = "";  
     })
     .catch(error => {
-        errorMessage.innerText = error.message; // Display error message
+        // Display error message
+        errorMessage.innerText = error.message;
     });
   });
 
