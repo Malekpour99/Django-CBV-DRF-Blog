@@ -10,6 +10,22 @@
           <div class="site-heading">
             <h1>Ink Impressions</h1>
             <span class="subheading">A Blog For Special Tastes</span>
+            <form class="form-control form-control-lg bg-transparent border-0 mt-5" action="{% url 'blog:search' %}" method="get">
+              <input class="form-control form-control-lg rounded-pill" type="text" name="search" id="search-bar" placeholder="looking for something?" required>
+              <button class="btn btn-outline-light mt-1 p-3 rounded">Search Posts</button>
+            </form>
+            <!-- Page Title -->
+            <h3 class="d-inline-block bg-secondary rounded-pill p-4 mt-4">
+              <i class="bi bi-arrow-down-circle"></i>
+              {{ page_title|title }}
+            </h3>
+            
+            <!-- Return link to blog index page -->
+            {% if not is_home %}
+            <a href="{% url 'blog:index' %}" class="btn btn-outline-light mt-4 rounded fs-4">
+              <i class="bi bi-arrow-left"></i> Return to Recent Posts
+            </a>
+            {% endif %}
           </div>
         </div>
       </div>
@@ -41,7 +57,7 @@
                 on {{ post.published_at|date:'d M Y' }}
                 
                 {% if post.category %}
-                <a href="{% url 'blog:category' cat_slug=post.category.slug %}" class="badge rounded-pill text-bg-secondary">{{ post.category.name }}</a>
+                <a href="{% url 'blog:category' cat_slug=post.category.slug %}" class="badge rounded-pill text-bg-secondary ms-2">{{ post.category.name }}</a>
                 {% endif %}
                   
               </p>
@@ -52,9 +68,36 @@
         {% endfor %}
 
         <!-- Pager -->
-        <div class="d-flex justify-content-end mb-4">
-          <a class="btn btn-primary text-uppercase" href="#!">Older Posts →</a>
+        {% if page_obj %}
+        <div class="d-flex justify-content-center mb-4">
+          <div class="pagination">
+            <span class="step-links">
+              {% if page_obj.has_previous %}
+              <a class="btn btn-primary p-3 text-uppercase rounded-pill" href="?page=1">&laquo; first</a>
+              <a class="btn btn-primary p-3 text-uppercase rounded-pill me-2" href="?page={{ page_obj.previous_page_number }}">previous</a>
+              {% endif %}
+              
+              <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+              </span>
+              
+              {% if page_obj.has_next %}
+              <a class="btn btn-primary p-3 text-uppercase rounded-pill ms-2" href="?page={{ page_obj.next_page_number }}">next</a>
+              <a class="btn btn-primary p-3 text-uppercase rounded-pill" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+              {% endif %}
+            </span>
+          </div>
         </div>
+        {% endif %}
+        {% if not is_home %}
+        <div class="d-flex justify-content-center mb-4">
+          <div class="d-block">
+            <a href="{% url 'blog:index' %}" class="btn btn-outline-primary rounded fs-5">
+              <i class="bi bi-arrow-left"></i> Return to Recent Posts
+            </a>
+          </div>
+        </div>
+        {% endif %}
       </div>
     </div>
   </div>

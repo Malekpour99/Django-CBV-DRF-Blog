@@ -9,7 +9,7 @@ from .category import Category
 
 
 class Post(BaseModel):
-    image = models.ImageField(upload_to="blog/", default="blog/default-post.png")
+    image = models.ImageField(upload_to="blog/", default="default/default-post.png")
     author = models.ForeignKey("accounts.profile", on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     content = models.TextField()
@@ -26,7 +26,7 @@ class Post(BaseModel):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.name)
+            self.slug = slugify(self.title)
             if Post.objects.filter(slug=self.slug).exists():
                 self.slug = f"{self.slug}-{uuid.uuid4().hex[:8]}"
         super().save(*args, **kwargs)
