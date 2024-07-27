@@ -3,6 +3,7 @@ from typing import Any
 
 from django.db.models import Q
 from django.utils import timezone
+from django.contrib import messages
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.shortcuts import render
@@ -97,6 +98,13 @@ class PostPublishView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.author_id = self.request.user.id
+
+        messages.add_message(
+            self.request,
+            messages.SUCCESS,
+            "Post created successfully! It will be published after approval.",
+        )
+
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
