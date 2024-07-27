@@ -28,7 +28,11 @@ class PostListView(ListView):
     def get_queryset(self) -> QuerySet[Any]:
         posts = (
             Post.objects.select_related("author")
-            .filter(published_status=True, published_at__lte=timezone.now())
+            .filter(
+                published_status=True,
+                is_deleted=False,
+                published_at__lte=timezone.now(),
+            )
             .order_by("-published_at")
         )
         if self.kwargs.get("cat_slug"):
@@ -74,9 +78,18 @@ class SearchView(View):
 
     def get(self, request, *args, **kwargs):
         search_query = self.request.GET.get("search", "")
-        posts = Post.objects.filter(
-            Q(content__icontains=search_query) | Q(title__icontains=search_query)
-        ).order_by("-published_at")
+        posts = (
+            Post.objects.select_related("author")
+            .filter(
+                published_status=True,
+                is_deleted=False,
+                published_at__lte=timezone.now(),
+            )
+            .filter(
+                Q(content__icontains=search_query) | Q(title__icontains=search_query)
+            )
+            .order_by("-published_at")
+        )
         page_title = "Search results for: " + '"' + search_query + '"'
         context = {
             "page_title": page_title,
