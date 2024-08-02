@@ -61,6 +61,9 @@ class PostDetailView(DetailView):
 
     model = Post
     template_name = "blog/post.html"
+    
+    def get_queryset(self) -> QuerySet[Any]:
+        return BlogPostHandler.fetch_published_posts()
 
 
 class SearchView(View):
