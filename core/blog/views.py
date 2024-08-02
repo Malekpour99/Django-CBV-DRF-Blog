@@ -2,7 +2,6 @@ import json
 from typing import Any
 
 from django.db.models import Q
-from django.utils import timezone
 from django.contrib import messages
 from django.http import JsonResponse
 from django.urls import reverse_lazy
@@ -14,6 +13,7 @@ from django.views.generic import View, ListView, DetailView, CreateView
 from rest_framework import status
 
 from blog.models import Post, Category
+from blog.utils import BlogPostHandler
 
 
 class PostListView(ListView):
@@ -26,15 +26,7 @@ class PostListView(ListView):
     paginate_by = 7
 
     def get_queryset(self) -> QuerySet[Any]:
-        posts = (
-            Post.objects.select_related("author")
-            .filter(
-                published_status=True,
-                is_deleted=False,
-                published_at__lte=timezone.now(),
-            )
-            .order_by("-published_at")
-        )
+        posts = BlogPostHandler.fetch_published_posts()
         if self.kwargs.get("cat_slug"):
             posts = posts.filter(category__slug=self.kwargs["cat_slug"])
         if self.kwargs.get("author_username"):
@@ -78,17 +70,8 @@ class SearchView(View):
 
     def get(self, request, *args, **kwargs):
         search_query = self.request.GET.get("search", "")
-        posts = (
-            Post.objects.select_related("author")
-            .filter(
-                published_status=True,
-                is_deleted=False,
-                published_at__lte=timezone.now(),
-            )
-            .filter(
-                Q(content__icontains=search_query) | Q(title__icontains=search_query)
-            )
-            .order_by("-published_at")
+        posts = BlogPostHandler.fetch_published_posts().filter(
+            Q(content__icontains=search_query) | Q(title__icontains=search_query)
         )
         page_title = "Search results for: " + '"' + search_query + '"'
         context = {
