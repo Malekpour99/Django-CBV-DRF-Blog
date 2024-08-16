@@ -8,7 +8,7 @@ from .users import User
 
 
 class Profile(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     username = models.CharField(max_length=250, unique=True)
     first_name = models.CharField(max_length=250)
     last_name = models.CharField(max_length=250)
