@@ -47,7 +47,7 @@ class TestAccountsAPI:
     """
 
     def test_user_registration(self, api_client):
-        url = reverse("accounts:registration")
+        url = reverse("accounts:api-v1:registration")
         data = {
             "email": "test@example.com",
             "password": "testpass123",
@@ -60,7 +60,7 @@ class TestAccountsAPI:
     def test_change_password(self, api_client, create_user):
         user = create_user("test@example.com", "oldpassword")
         api_client.force_authenticate(user=user)
-        url = reverse("accounts:change-password")
+        url = reverse("accounts:api-v1:change-password")
         data = {
             "old_password": "oldpassword",
             "new_password": "newpassword123",
@@ -72,7 +72,7 @@ class TestAccountsAPI:
 
     def test_custom_obtain_auth_token(self, api_client, create_user):
         create_user("test@example.com", "password123")
-        url = reverse("accounts:token-login")
+        url = reverse("accounts:api-v1:token-login")
         data = {"email": "test@example.com", "password": "password123"}
         response = api_client.post(url, data, format="json")
         assert response.status_code == status.HTTP_200_OK
@@ -82,13 +82,13 @@ class TestAccountsAPI:
         user = create_user("test@example.com", "password123")
         Token.objects.create(user=user)
         api_client.force_authenticate(user=user)
-        url = reverse("accounts:token-logout")
+        url = reverse("accounts:api-v1:token-logout")
         response = api_client.post(url, format="json")
         assert response.status_code == status.HTTP_204_NO_CONTENT
 
     def test_activation_resend(self, api_client, create_user):
         create_user("test@example.com", "password123", is_verified=False)
-        url = reverse("accounts:activation-resend")
+        url = reverse("accounts:api-v1:activation-resend")
         data = {"email": "test@example.com"}
         response = api_client.post(url, data, format="json")
         assert response.status_code == status.HTTP_200_OK
@@ -98,14 +98,14 @@ class TestAccountsAPI:
         profile = create_profile("test@example.com", "password123")
         user = profile.user
         api_client.force_authenticate(user=user)
-        url = reverse("accounts:profile")
+        url = reverse("accounts:api-v1:profile")
         response = api_client.get(url, format="json")
         assert response.status_code == status.HTTP_200_OK
         assert response.data["email"] == user.email
 
     def test_reset_password(self, api_client, create_user):
         create_user("test@example.com", "password123")
-        url = reverse("accounts:reset-password")
+        url = reverse("accounts:api-v1:reset-password")
         data = {"email": "test@example.com"}
         response = api_client.post(url, data, format="json")
         assert response.status_code == status.HTTP_200_OK
@@ -113,7 +113,7 @@ class TestAccountsAPI:
 
     def test_reset_password_confirm(self, api_client, create_user):
         user = create_user("test@example.com", "password123")
-        url = reverse("accounts:reset-password-confirm")
+        url = reverse("accounts:api-v1:reset-password-confirm")
         token = TokenHandler.get_tokens_for_user(user)
         data = {
             "token": token,
