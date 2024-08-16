@@ -13,7 +13,7 @@ class Profile(models.Model):
     first_name = models.CharField(max_length=250, blank=True)
     last_name = models.CharField(max_length=250, blank=True)
     image = models.ImageField(
-        upload_to="accounts/", default="accounts/anonymous-person.jpg"
+        upload_to="accounts/", default="default/default-profile.jpg"
     )
     bio = models.TextField(blank=True, null=True)
 
