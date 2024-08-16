@@ -23,8 +23,8 @@ class Profile(models.Model):
     def save(self, *args, **kwargs):
         if not self.username:
             self.username = self.user.email.split("@")[0]
-        if Profile.objects.filter(username=self.username).exists():
-            self.username = f"{self.username}-{uuid.uuid4().hex[:8]}"
+            if Profile.objects.filter(username=self.username).exists():
+                self.username = f"{self.username}-{uuid.uuid4().hex[:8]}"
         super().save(*args, **kwargs)
 
 
