@@ -10,8 +10,8 @@ from .users import User
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     username = models.CharField(max_length=250, unique=True)
-    first_name = models.CharField(max_length=250)
-    last_name = models.CharField(max_length=250)
+    first_name = models.CharField(max_length=250, blank=True)
+    last_name = models.CharField(max_length=250, blank=True)
     image = models.ImageField(
         upload_to="accounts/", default="accounts/anonymous-person.jpg"
     )
