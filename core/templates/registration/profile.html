@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block header_content %}
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url({{ profile.image.url }})">
+    <div class="container position-relative px-4 px-lg-5">
+      <div class="row gx-4 gx-lg-5 justify-content-center">
+        <div class="col-md-10 col-lg-8 col-xl-7">
+          <div class="page-heading">
+            <h1>Profile</h1>
+            <span class="subheading">Manage Your personal information and blog posts.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+{% endblock header_content %}
+
+{% block main_content %}
+  <!-- Main Content -->
+  <main class="container w-50 mb-4">
+
+    {% include "includes/form-errors.html" %}
+    
+    <form class="rounded border border-3 px-4 custom-width" method="post" action="{% url 'accounts:login' %}">
+      {% csrf_token %}
+
+      <div class="form-floating rounded-5 custom-width">
+        <input type="text" class="form-control" id="username" name="username" placeholder="your username" value="{{ profile.username }}"/>
+        <label for="floatingInput">Username</label>
+      </div>
+      <div class="form-floating rounded-5 custom-width">
+        <input type="text" class="form-control" id="first_name" name="first_name" placeholder="your first name" value="{{ profile.first_name }}"/>
+        <label for="floatingInput">First Name</label>
+      </div>
+      <div class="form-floating rounded-5 custom-width">
+        <input type="text" class="form-control" id="last_name" name="last_name" placeholder="your last name" value="{{ profile.last_name }}"/>
+        <label for="floatingInput">Last Name</label>
+      </div>
+      <div class="form-floating rounded-5 custom-width">
+        <textarea type="text" class="form-control" id="bio" name="bio" placeholder="tell others about yourself" value="{{ profile.bio }}"></textarea>
+        <label for="floatingInput">Bio</label>
+      </div>
+      <div class="form-floating rounded-5 custom-width">
+        <input type="file" class="form-control" id="image" name="image" placeholder="your image"/>
+        <label for="floatingInput">Profile Image</label>
+      </div>
+      
+
+      <div class="custom-width">
+          <button class="btn btn-success w-100 py-2 rounded-5" type="submit">Save</button>
+      </div>
+    </form>
+  </main>
+{% endblock main_content %}
