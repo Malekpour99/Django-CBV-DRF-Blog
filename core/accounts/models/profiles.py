@@ -8,12 +8,12 @@ from .users import User
 
 
 class Profile(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     username = models.CharField(max_length=250, unique=True)
-    first_name = models.CharField(max_length=250)
-    last_name = models.CharField(max_length=250)
+    first_name = models.CharField(max_length=250, blank=True)
+    last_name = models.CharField(max_length=250, blank=True)
     image = models.ImageField(
-        upload_to="accounts/", default="accounts/anonymous-person.jpg"
+        upload_to="accounts/", default="default/default-profile.jpg"
     )
     bio = models.TextField(blank=True, null=True)
 
@@ -23,8 +23,8 @@ class Profile(models.Model):
     def save(self, *args, **kwargs):
         if not self.username:
             self.username = self.user.email.split("@")[0]
-        if Profile.objects.filter(username=self.username).exists():
-            self.username = f"{self.username}-{uuid.uuid4().hex[:8]}"
+            if Profile.objects.filter(username=self.username).exists():
+                self.username = f"{self.username}-{uuid.uuid4().hex[:8]}"
         super().save(*args, **kwargs)
 
 
