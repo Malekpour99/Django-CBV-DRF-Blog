@@ -1,11 +1,11 @@
 import json
 from typing import Any
 
-from django.db.models import Q
+from django.shortcuts import render
 from django.contrib import messages
 from django.http import JsonResponse
 from django.urls import reverse_lazy
-from django.shortcuts import render
+from django.db.models import Q, Count
 from django.db.models.query import QuerySet
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View, ListView, DetailView, CreateView
@@ -34,8 +34,18 @@ class PostListView(ListView):
         return posts
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
         is_home = True
+        context = super().get_context_data(**kwargs)
+        categories = (
+            Category.objects.filter(is_deleted=False)
+            .order_by("name")
+            .annotate(
+                published_post_count=Count(
+                    "posts",
+                    filter=Q(posts__published_status=True, posts__is_deleted=False),
+                )
+            )
+        )
 
         if self.kwargs.get("cat_slug"):
             category = self.kwargs["cat_slug"]
@@ -49,6 +59,8 @@ class PostListView(ListView):
             page_title = "Recent Posts"
 
         context["page_title"] = page_title
+        context["categories"] = categories
+        context["selected_category"] = self.kwargs.get("cat_slug")
         context["is_home"] = is_home
 
         return context
@@ -61,7 +73,7 @@ class PostDetailView(DetailView):
 
     model = Post
     template_name = "blog/post.html"
-    
+
     def get_queryset(self) -> QuerySet[Any]:
         return BlogPostHandler.fetch_published_posts()
 
