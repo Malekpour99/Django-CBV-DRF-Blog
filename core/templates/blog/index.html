@@ -32,8 +32,8 @@
 {% block main_content %}
   <!-- Main Content -->
   <div class="container px-4 px-lg-5">
-    <div class="row gx-2 gx-lg-3 justify-content-center">
-      <div class="col-md-10 col-lg-8 col-xl-7">
+    <div class="row gx-5 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-9 col-xl-8">
         {% for post in posts %}
         <!-- Post preview -->
         <div class="card mb-3">
@@ -99,6 +99,25 @@
         </div>
         {% endif %}
       </div>
+      <!-- Sidebar -->
+      <div class="col-md-2 col-lg-3 col-xl-4">
+        <div class="row">
+          <h3>Categories</h3>
+          <ul class="list-group">
+            {% for category in categories %}
+            <li class="list-group-item list-group-item-action cursor-pointer {% if selected_category == category.name %} active {% endif %}">
+              <a href="{% url 'blog:category' cat_slug=category.slug %}" class="d-flex justify-content-between align-items-center">
+                {{ category.name }}
+                <span class="badge {% if selected_category == category.name %} text-bg-light {% else %} text-bg-primary {% endif %} rounded-pill">
+                  {{ category.published_post_count }}
+                </span>
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      <!-- Sidebar end -->
     </div>
   </div>
 {% endblock %}
