@@ -1,6 +1,6 @@
-from django.urls import reverse, reverse_lazy
 from django.shortcuts import redirect
 from django.contrib.auth import login
+from django.urls import reverse, reverse_lazy
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import FormView, UpdateView
@@ -45,9 +45,20 @@ class ProfileView(LoginRequiredMixin, UpdateView):
     model = Profile
     fields = ["image", "first_name", "last_name", "username", "bio"]
 
+    def dispatch(self, request, *args, **kwargs):
+        username = self.kwargs.get('username')
+        profile = get_object_or_404(Profile, username=username)
+
+        # Check if the profile belongs to the currently logged-in user
+        if profile.user != self.request.user:
+            # Redirect to the user's own profile
+            return redirect("accounts:profile", username=self.request.user.profile.username)
+
+        return super().dispatch(request, *args, **kwargs)
+
     def get_object(self, queryset=None):
-            username = self.kwargs.get('username')
-            return get_object_or_404(Profile, username=username)
+        username = self.kwargs.get('username')
+        return get_object_or_404(Profile, username=username)        
         
     def get_success_url(self):
         return reverse("accounts:profile", kwargs={"username": self.object.username})
