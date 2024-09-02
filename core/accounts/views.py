@@ -1,4 +1,4 @@
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.shortcuts import redirect
 from django.contrib.auth import login
 from django.shortcuts import get_object_or_404
@@ -44,8 +44,10 @@ class ProfileView(LoginRequiredMixin, UpdateView):
     template_name = "registration/profile.html"
     model = Profile
     fields = ["image", "first_name", "last_name", "username", "bio"]
-    success_url = reverse_lazy("accounts:user-profile")
 
     def get_object(self, queryset=None):
             username = self.kwargs.get('username')
             return get_object_or_404(Profile, username=username)
+        
+    def get_success_url(self):
+        return reverse("accounts:profile", kwargs={"username": self.object.username})
