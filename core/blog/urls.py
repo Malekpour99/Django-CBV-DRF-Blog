@@ -12,4 +12,5 @@ urlpatterns = [
     path("search/", views.SearchView.as_view(), name="search"),
     path("post-publish/", views.PostPublishView.as_view(), name="post-publish"),
     path("category-publish/", views.CategoryPublishView.as_view(), name="category-publish"),
+    path("blog/your-posts/<slug:slug>/", views.UserPostDetailView.as_view(), name="user-post-detail"),
 ]
