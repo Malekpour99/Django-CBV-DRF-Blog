@@ -99,12 +99,17 @@
         </div>
         {% endif %}
       </div>
-      <!-- Sidebar -->
+      <!-- Categories Sidebar -->
+      {% if categories %}
       <div class="col-md-1 col-lg-2 col-xl-3">
         <div class="row">
+          
           <h3>Categories</h3>
+          
           <ul class="list-group">
             {% for category in categories %}
+            
+            {% if category.published_post_count %}              
             <li class="list-group-item list-group-item-action cursor-pointer {% if selected_category == category.name %} active {% endif %}">
               <a href="{% url 'blog:category' cat_slug=category.slug %}" class="d-flex justify-content-between align-items-center">
                 {{ category.name }}
@@ -113,11 +118,14 @@
                 </span>
               </a>
             </li>
+            {% endif %}
+            
             {% endfor %}
           </ul>
         </div>
       </div>
-      <!-- Sidebar end -->
+      {% endif %}
+      <!-- Categories Sidebar end -->
     </div>
   </div>
 {% endblock %}
