@@ -78,6 +78,18 @@ class PostDetailView(DetailView):
         return BlogPostHandler.fetch_published_posts()
 
 
+class UserPostDetailView(DetailView):
+    """
+    Showing details of a user's post
+    """
+
+    model = Post
+    template_name = "blog/post.html"
+
+    def get_queryset(self) -> QuerySet[Any]:
+        return BlogPostHandler.fetch_user_posts(self.request.user.id)
+
+
 class SearchView(View):
     """
     Searching blog posts
