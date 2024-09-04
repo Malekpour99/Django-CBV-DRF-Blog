@@ -172,3 +172,23 @@ class CategoryPublishView(LoginRequiredMixin, View):
             return JsonResponse(
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+
+class UserPostsListView(ListView):
+    """
+    Showing a list of user published, pending, rejected and deleted posts.
+    """
+
+    template_name = "blog/user_posts.html"
+    context_object_name = "posts"
+
+    def get_queryset(self) -> QuerySet[Any]:
+        posts = Post.objects.filter(author__user=self.request.user).order_by("-published_at")
+        return posts
+
+    def get_context_data(self, **kwargs):
+        is_home = False
+        context = super().get_context_data(**kwargs)
+
+        context["is_home"] = is_home
+        return context
