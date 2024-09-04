@@ -1,0 +1,38 @@
+<!-- Post list -->
+<div class="d-flex flex-column justify-content-center align-items-center">
+{% for post in posts %}
+    <div class="card" style="width: 18rem;">
+        <a href="{% url 'blog:post-detail' post.slug %}">
+        <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}">
+        </a>
+        <div class="card-body">
+        <h5 class="card-title">{{ post.title|title }}</h5>
+        <p class="card-text my-0">{{ post.content|truncatewords:15 }}</p>
+        <p class="card-text my-2">
+            <small class="text-body-secondary">
+            Posted on {{ post.published_at|date:'d M Y' }}
+            </small>
+        </p>
+        <div class="d-flex justify-content-between">
+            {% if post.category %}
+            <a href="{% url 'blog:category' cat_slug=post.category.slug %}" class="badge rounded-pill text-bg-secondary text-decoration-none fw-italic">
+            {{ post.category.name }}
+            </a>
+            {% endif %}
+            <span 
+            class="badge rounded-pill text-white text-bg-{% if post.published_status == True %}success{% elif post.published_status == False %}danger{%else%}warning{% endif %}"if
+            >
+            {% if post.published_status == True %}
+                Published
+            {% elif post.published_status == False %}
+                Rejected
+            {%else%}
+                Pending
+            {% endif %}
+            </span>
+        </div>
+        </div>
+    </div>
+{% endfor %}
+</div>
+<!-- Post list End -->
