@@ -1,13 +1,15 @@
 <!-- Post list -->
 <div class="d-flex flex-column justify-content-center align-items-center">
 {% for post in posts %}
-    <div class="card" style="width: 18rem;">
-        <a href="{% url 'blog:post-detail' post.slug %}">
-        <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}">
+    <div class="card mt-2">
+        <a href="{% if post.published_status == True %}{% url 'blog:post-detail' post.slug %}{%else%}{% url 'blog:user-post-detail' post.slug %}{% endif %}">
+            <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}" style="max-height: 250px;">
         </a>
         <div class="card-body">
-        <h5 class="card-title">{{ post.title|title }}</h5>
-        <p class="card-text my-0">{{ post.content|truncatewords:15 }}</p>
+            <a href="{% if post.published_status == True %}{% url 'blog:post-detail' post.slug %}{%else%}{% url 'blog:user-post-detail' post.slug %}{% endif %}">
+                <h5 class="card-title">{{ post.title|title }}</h5>
+                <p class="card-text my-0">{{ post.content|truncatewords:15 }}</p>
+            </a>
         <p class="card-text my-2">
             <small class="text-body-secondary">
             Posted on {{ post.published_at|date:'d M Y' }}
