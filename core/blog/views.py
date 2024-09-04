@@ -174,7 +174,7 @@ class CategoryPublishView(LoginRequiredMixin, View):
             )
 
 
-class UserPostsListView(ListView):
+class UserPostsListView(LoginRequiredMixin, ListView):
     """
     Showing a list of user published, pending, rejected and deleted posts.
     """
@@ -183,7 +183,7 @@ class UserPostsListView(ListView):
     context_object_name = "posts"
 
     def get_queryset(self) -> QuerySet[Any]:
-        posts = Post.objects.filter(author__user=self.request.user).order_by("-published_at")
+        posts = BlogPostHandler.fetch_user_posts(self.request.user.id)
         return posts
 
     def get_context_data(self, **kwargs):
