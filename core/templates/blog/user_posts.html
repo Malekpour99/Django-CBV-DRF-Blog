@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load blog_tags %}
+
+{% block header_content %}
+  <!-- Page Header -->
+    <div class="container mb-4" style="margin-top: 7rem;">
+      <div class="row gx-4 gx-lg-5">
+        <div class="col-md-10 col-lg-8 col-xl-7">
+          <div class="page-heading">
+            <h1>Your Posts</h1>
+            <span class="subheading">Check your posts status and manage them here.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock header_content %}
+
+{% block main_content %}
+  <!-- Main Content -->
+  <div class="container px-2">
+    <div class="row gx-3 justify-content-center">
+
+
+      <div class="col">
+        <p class="border-bottom border-3 border-success w-100 text-center fs-3 fw-bold mt-0 mb-2">Published Posts</p>
+        <!-- Published Posts -->
+        {% filter_user_posts status=True %}
+      </div>
+      
+      <div class="col">
+        <p class="border-bottom border-3 border-warning w-100 text-center fs-3 fw-bold mt-0 mb-2">Pending Posts</p>
+        <!-- Pending Posts -->
+        {% filter_user_posts status=None %}
+      </div>
+      
+      <div class="col">
+        <p class="border-bottom border-3 border-danger w-100 text-center fs-3 fw-bold mt-0 mb-2">Rejected Posts</p>
+        <!-- Rejected Posts -->
+        {% filter_user_posts status=False %}
+      </div>
+
+      {% if not is_home %}
+        <div class="d-flex justify-content-center mb-4">
+          <div class="d-block">
+            <a href="{% url 'blog:index' %}" class="btn btn-outline-primary rounded fs-5">
+              <i class="bi bi-arrow-left"></i> Return to Recent Posts
+            </a>
+          </div>
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+{% endblock %}
