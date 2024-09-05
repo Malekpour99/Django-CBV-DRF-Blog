@@ -1,11 +1,11 @@
 import json
 from typing import Any
 
-from django.db.models import Q
+from django.shortcuts import render
 from django.contrib import messages
 from django.http import JsonResponse
 from django.urls import reverse_lazy
-from django.shortcuts import render
+from django.db.models import Q, Count
 from django.db.models.query import QuerySet
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View, ListView, DetailView, CreateView
@@ -34,8 +34,18 @@ class PostListView(ListView):
         return posts
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
         is_home = True
+        context = super().get_context_data(**kwargs)
+        categories = (
+            Category.objects.filter(is_deleted=False)
+            .order_by("name")
+            .annotate(
+                published_post_count=Count(
+                    "posts",
+                    filter=Q(posts__published_status=True, posts__is_deleted=False),
+                )
+            )
+        )
 
         if self.kwargs.get("cat_slug"):
             category = self.kwargs["cat_slug"]
@@ -49,6 +59,8 @@ class PostListView(ListView):
             page_title = "Recent Posts"
 
         context["page_title"] = page_title
+        context["categories"] = categories
+        context["selected_category"] = self.kwargs.get("cat_slug")
         context["is_home"] = is_home
 
         return context
@@ -61,9 +73,33 @@ class PostDetailView(DetailView):
 
     model = Post
     template_name = "blog/post.html"
-    
+
     def get_queryset(self) -> QuerySet[Any]:
         return BlogPostHandler.fetch_published_posts()
+
+
+class UserPostDetailView(DetailView):
+    """
+    Showing details of a user's post
+    """
+
+    model = Post
+    template_name = "blog/post.html"
+
+    def get_queryset(self) -> QuerySet[Any]:
+        return BlogPostHandler.fetch_user_posts(self.request.user.id)
+
+class AdminPostDetailView(DetailView):
+    """
+    Showing details of any post to admin users
+    """
+
+    model = Post
+    template_name = "blog/post.html"
+
+    def get_queryset(self) -> QuerySet[Any]:
+        if self.request.user.is_superuser:
+            return Post.objects.all()
 
 
 class SearchView(View):
@@ -160,3 +196,23 @@ class CategoryPublishView(LoginRequiredMixin, View):
             return JsonResponse(
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+
+class UserPostsListView(LoginRequiredMixin, ListView):
+    """
+    Showing a list of user published, pending, rejected and deleted posts.
+    """
+
+    template_name = "blog/user_posts.html"
+    context_object_name = "posts"
+
+    def get_queryset(self) -> QuerySet[Any]:
+        posts = BlogPostHandler.fetch_user_posts(self.request.user.id)
+        return posts
+
+    def get_context_data(self, **kwargs):
+        is_home = False
+        context = super().get_context_data(**kwargs)
+
+        context["is_home"] = is_home
+        return context

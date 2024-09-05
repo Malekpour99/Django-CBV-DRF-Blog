@@ -32,35 +32,39 @@
 {% block main_content %}
   <!-- Main Content -->
   <div class="container px-4 px-lg-5">
-    <div class="row gx-2 gx-lg-3 justify-content-center">
-      <div class="col-md-10 col-lg-8 col-xl-7">
+    <div class="row gx-5 gx-lg-5 justify-content-center">
+      <div class="col-md-11 col-lg-10 col-xl-9">
         {% for post in posts %}
-          <!-- Post preview -->
-          <div class="row">
-            <div class="col-3 d-flex align-items-center justify-content-center">
-              <a href="{% url 'blog:post-detail' post.slug %}">
-                <img src="{{ post.image.url }}" alt="{{ post.title }}" class="img-fluid w-100 fit-image" />
-              </a>
-            </div>
-            <div class="post-preview col-9">
-              <a href="{% url 'blog:post-detail' post.slug %}">
-                <h2 class="post-title">{{ post.title|title }}</h2>
-                <h3 class="post-subtitle">{{ post.content|truncatewords:15 }}</h3>
-              </a>
-              <p class="post-meta">
-                Posted by
-                <a href="{% url 'blog:author' author_username=post.author.username %}">{{ post.author.username }}</a>
-                on {{ post.published_at|date:'d M Y' }}
-                
-                {% if post.category %}
-                <a href="{% url 'blog:category' cat_slug=post.category.slug %}" class="badge rounded-pill text-bg-secondary ms-2">{{ post.category.name }}</a>
-                {% endif %}
-                  
-              </p>
+        <!-- Post preview -->
+        <div class="card mb-3">
+          <div class="row g-0">
+            <div class="col-md-4">
+                <a href="{% url 'blog:post-detail' post.slug %}">
+                  <img class="img-fluid rounded-start h-100" src="{{ post.image.url }}" alt="{{ post.title }}">
+                </a>
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <a href="{% url 'blog:post-detail' post.slug %}">
+                    <h5 class="card-title fw-bold fs-5">{{ post.title|title }}</h5>
+                    <p class="card-text fw-lighter fs-6 mt-3">{{ post.content|truncatewords:15 }}</p>
+                  </a>
+                  <p class="card-text">
+                    <small class="text-body-secondary">
+                    Posted by
+                    <a href="{% url 'blog:author' author_username=post.author.username %}">{{ post.author.username }}</a>
+                    on {{ post.published_at|date:'d M Y' }}
+                  </small>
+                  {% if post.category %}
+                  <a href="{% url 'blog:category' cat_slug=post.category.slug %}" class="badge rounded-pill text-bg-secondary ms-2 text-decoration-none fw-italic">
+                    {{ post.category.name }}
+                  </a>
+                  {% endif %}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
-          <!-- Divider -->
-          <hr class="my-4" />
         {% endfor %}
 
         <!-- Pager -->
@@ -95,6 +99,33 @@
         </div>
         {% endif %}
       </div>
+      <!-- Categories Sidebar -->
+      {% if categories %}
+      <div class="col-md-1 col-lg-2 col-xl-3">
+        <div class="row">
+          
+          <h3>Categories</h3>
+          
+          <ul class="list-group">
+            {% for category in categories %}
+            
+            {% if category.published_post_count %}              
+            <li class="list-group-item list-group-item-action cursor-pointer {% if selected_category == category.name %} active {% endif %}">
+              <a href="{% url 'blog:category' cat_slug=category.slug %}" class="d-flex justify-content-between align-items-center">
+                {{ category.name }}
+                <span class="badge {% if selected_category == category.name %} text-bg-light {% else %} text-bg-primary {% endif %} rounded-pill">
+                  {{ category.published_post_count }}
+                </span>
+              </a>
+            </li>
+            {% endif %}
+            
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      {% endif %}
+      <!-- Categories Sidebar end -->
     </div>
   </div>
 {% endblock %}

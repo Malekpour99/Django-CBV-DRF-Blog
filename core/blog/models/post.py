@@ -18,7 +18,7 @@ class Post(BaseModel):
         Category, null=True, on_delete=models.SET_NULL, related_name="posts"
     )
     counted_views = models.IntegerField(default=0)
-    published_status = models.BooleanField(default=False)
+    published_status = models.BooleanField(blank=True, null=True)
     published_at = models.DateTimeField()
 
     def __str__(self):
@@ -32,4 +32,4 @@ class Post(BaseModel):
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse("blog:single", kwargs={"pid": self.id})
+        return reverse("blog:admin-post-detail", kwargs={"slug": self.slug})

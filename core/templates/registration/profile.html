@@ -3,54 +3,84 @@
 
 {% block header_content %}
   <!-- Page Header -->
-  <header class="masthead" style="background-image: url({{ profile.image.url }})">
-    <div class="container position-relative px-4 px-lg-5">
-      <div class="row gx-4 gx-lg-5 justify-content-center">
+    <div class="container w-50" style="margin-top: 7rem;">
+      <div class="row gx-4 gx-lg-5">
         <div class="col-md-10 col-lg-8 col-xl-7">
           <div class="page-heading">
             <h1>Profile</h1>
-            <span class="subheading">Manage Your personal information and blog posts.</span>
+            <span class="subheading">Manage Your personal information here.</span>
           </div>
         </div>
       </div>
     </div>
-  </header>
 {% endblock header_content %}
 
 {% block main_content %}
   <!-- Main Content -->
-  <main class="container w-50 mb-4">
+  <main class="container w-50 my-4">
 
-    {% include "includes/form-errors.html" %}
+    <div class="card">
+      <div class="row g-0">
+        <div class="col-md-4 d-flex justify-content-center align-items-center ps-2 pe-1">
+          <img src="{{ profile.image.url }}" class="img-fluid rounded-start" alt="{{ profile.username }}">
+        </div>
+        <div class="col-md-8">
+          <div class="card-body p-1">
+
+          {% include "includes/form-errors.html" %}
     
-    <form class="rounded border border-3 px-4 custom-width" method="post" action="{% url 'accounts:login' %}">
-      {% csrf_token %}
+          <form class="rounded border border-3 px-4 custom-width" method="post" action="{% url 'accounts:profile' username=profile.username %}" enctype="multipart/form-data">
+            {% csrf_token %}
 
-      <div class="form-floating rounded-5 custom-width">
-        <input type="text" class="form-control" id="username" name="username" placeholder="your username" value="{{ profile.username }}"/>
-        <label for="floatingInput">Username</label>
-      </div>
-      <div class="form-floating rounded-5 custom-width">
-        <input type="text" class="form-control" id="first_name" name="first_name" placeholder="your first name" value="{{ profile.first_name }}"/>
-        <label for="floatingInput">First Name</label>
-      </div>
-      <div class="form-floating rounded-5 custom-width">
-        <input type="text" class="form-control" id="last_name" name="last_name" placeholder="your last name" value="{{ profile.last_name }}"/>
-        <label for="floatingInput">Last Name</label>
-      </div>
-      <div class="form-floating rounded-5 custom-width">
-        <textarea type="text" class="form-control" id="bio" name="bio" placeholder="tell others about yourself" value="{{ profile.bio }}"></textarea>
-        <label for="floatingInput">Bio</label>
-      </div>
-      <div class="form-floating rounded-5 custom-width">
-        <input type="file" class="form-control" id="image" name="image" placeholder="your image"/>
-        <label for="floatingInput">Profile Image</label>
-      </div>
-      
+            <div class="form-floating rounded-5 custom-width">
+              <input type="text" class="form-control" id="username" name="username" placeholder="your username" value="{{ profile.username }}"/>
+              <label for="floatingInput">Username</label>
+            </div>
+            <div class="form-floating rounded-5 custom-width">
+              <input type="text" class="form-control" id="first_name" name="first_name" placeholder="your first name" value="{{ profile.first_name }}"/>
+              <label for="floatingInput">First Name</label>
+            </div>
+            <div class="form-floating rounded-5">
+              <input type="text" class="form-control" id="last_name" name="last_name" placeholder="your last name" value="{{ profile.last_name }}"/>
+              <label for="floatingInput">Last Name</label>
+            </div>
+            <div class="form-floating rounded-5">
+              <textarea class="form-control" id="bio" name="bio" placeholder="tell others about yourself">{% if profile.bio %}{{ profile.bio }}{% else %}{% endif %}</textarea>
+              <label for="floatingInput">Bio</label>
+            </div>
+            <div class="form-floating rounded-5">
+              <input type="file" class="form-control" id="image" name="image" placeholder="your image" enctype="multipart/form-data"/>
+              <label for="floatingInput">Profile Image</label>
+            </div>
 
-      <div class="custom-width">
-          <button class="btn btn-success w-100 py-2 rounded-5" type="submit">Save</button>
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-success p-3 px-5 rounded-5 my-3" type="submit">Update</button>
+            </div>
+          </form>
+
+          </div>
+        </div>
       </div>
-    </form>
+    </div>
   </main>
 {% endblock main_content %}
+
+
+{% block custom_scripts %}
+  <script>
+    // adjusting profile bio textarea height dynamically
+    document.addEventListener('DOMContentLoaded', function () {
+      const textarea = document.getElementById('bio');
+
+      // Adjust height based on content
+      textarea.addEventListener('input', function () {
+          textarea.style.height = 'auto';
+          textarea.style.height = textarea.scrollHeight + 1 + 'px';
+      });
+
+      // Initialize height
+      textarea.style.height = textarea.scrollHeight + 1 + 'px';
+    });  
+  </script>
+{% endblock custom_scripts %}
+  

@@ -163,4 +163,4 @@ cython_debug/
 .vscode
 
 # uploaded media files
-core/media/blog/
+core/media/*
