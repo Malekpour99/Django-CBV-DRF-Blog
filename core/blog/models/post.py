@@ -32,4 +32,4 @@ class Post(BaseModel):
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse("blog:single", kwargs={"pid": self.id})
+        return reverse("blog:admin-post-detail", kwargs={"slug": self.slug})
