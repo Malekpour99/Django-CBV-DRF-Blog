@@ -8,7 +8,7 @@ from django.urls import reverse_lazy
 from django.db.models import Q, Count
 from django.db.models.query import QuerySet
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import View, ListView, DetailView, CreateView
+from django.views.generic import View, ListView, DetailView, CreateView, DeleteView
 
 from rest_framework import status
 
@@ -88,6 +88,20 @@ class UserPostDetailView(DetailView):
 
     def get_queryset(self) -> QuerySet[Any]:
         return BlogPostHandler.fetch_user_posts(self.request.user.id)
+
+
+class UserPostDeleteView(LoginRequiredMixin, DeleteView):
+    """
+    Deleting desired post which if it's owned by authenticated user
+    """
+
+    template_name = "blog/user_posts.html"
+
+    def get_queryset(self):
+        return BlogPostHandler.fetch_user_posts(self.request.user.id)
+
+    def get_success_url(self):
+        return reverse_lazy("blog:user-posts")
 
 
 class AdminPostDetailView(DetailView):
