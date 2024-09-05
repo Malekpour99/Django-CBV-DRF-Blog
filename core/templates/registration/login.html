@@ -19,31 +19,33 @@
 
 {% block main_content %}
   <!-- Main Content -->
-  <main class="container w-50 mb-4">
-    {% if form.errors %}
-      <p class="text-center text-danger">Your email and password didn't match! Please try again.</p>
-    {% endif %}
-    <h2 class="h3 mb-3 fw-normal text-center">Log-in Here</h2>
-    <form class="rounded border border-3 px-4 custom-width" method="post" action="{% url 'accounts:login' %}">
-      {% csrf_token %}
+  <main class="container mb-4 d-flex justify-content-center">
+    <div class="col-md-9 col-lg-7 col-xl-6">
+      {% if form.errors %}
+        <p class="text-center text-danger">Your email and password didn't match! Please try again.</p>
+      {% endif %}
+      <h2 class="h3 mb-3 fw-normal text-center">Log-in Here</h2>
+      <form class="rounded border border-3 px-4 custom-width" method="post" action="{% url 'accounts:login' %}">
+        {% csrf_token %}
 
-      <div class="form-floating rounded-5 custom-width">
-        <input type="email" class="form-control" id="user_email" name="username" placeholder="name@example.com" />
-        <label for="floatingInput">Email address</label>
-      </div>
-      <div class="form-floating mb-4 rounded-5 custom-width">
-        <input type="password" class="form-control" id="user_password" name="password" placeholder="Password" />
-        <label for="floatingPassword">Password</label>
-      </div>
+        <div class="form-floating rounded-5 custom-width">
+          <input type="email" class="form-control" id="user_email" name="username" placeholder="name@example.com" />
+          <label for="floatingInput">Email address</label>
+        </div>
+        <div class="form-floating mb-4 rounded-5 custom-width">
+          <input type="password" class="form-control" id="user_password" name="password" placeholder="Password" />
+          <label for="floatingPassword">Password</label>
+        </div>
 
-      <input type="hidden" name="next" value="{{ next }}" />
+        <input type="hidden" name="next" value="{{ next }}" />
 
-      <div class="custom-width">
-          <button class="btn btn-primary w-100 py-2 rounded-5" type="submit">Log in</button>
-      </div>
-      <p class="m-3 text-center fs-6">
-        Don't Have an account? <a href="{% url 'accounts:register' %}">Register</a> here.
-      </p>
-    </form>
+        <div class="custom-width">
+            <button class="btn btn-primary w-100 py-2 rounded-5" type="submit">Log in</button>
+        </div>
+        <p class="m-3 text-center fs-6">
+          Don't Have an account? <a href="{% url 'accounts:register' %}">Register</a> here.
+        </p>
+      </form>
+    </div>
   </main>
 {% endblock main_content %}
