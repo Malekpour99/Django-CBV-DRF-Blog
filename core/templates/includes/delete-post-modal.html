@@ -1,0 +1,40 @@
+<!-- Delete Post Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete Post</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete "<strong id="post-title"></strong>" blog post?
+                <p class="text-danger fw-bold m-0">
+                    This action is not reversible!
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form method="post" id="delete-form" action="">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Delete Post Modal Scripts -->
+<script>
+    const deleteModal = document.getElementById('deleteModal')
+      deleteModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget
+        const postTitle = button.getAttribute('data-post-title')
+        const postSlug = button.getAttribute('data-post-slug')
+        const modalPostTitle = deleteModal.querySelector('#post-title')
+        const deleteForm = deleteModal.querySelector('#delete-form')
+      
+        modalPostTitle.textContent = postTitle
+        deleteForm.action = "{% url 'blog:user-post-delete' slug=0 %}".replace('0', postSlug)
+      });
+</script>
