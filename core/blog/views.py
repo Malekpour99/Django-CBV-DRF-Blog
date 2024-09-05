@@ -91,7 +91,7 @@ class UserPostDetailView(DetailView):
 
 class AdminPostDetailView(DetailView):
     """
-    Showing details of all the posts to admins
+    Showing details of any post to admin users
     """
 
     model = Post
