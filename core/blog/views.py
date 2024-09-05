@@ -89,6 +89,7 @@ class UserPostDetailView(DetailView):
     def get_queryset(self) -> QuerySet[Any]:
         return BlogPostHandler.fetch_user_posts(self.request.user.id)
 
+
 class AdminPostDetailView(DetailView):
     """
     Showing details of any post to admin users
