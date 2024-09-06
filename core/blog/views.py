@@ -127,8 +127,17 @@ class UserPostEditView(LoginRequiredMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         categories = Category.objects.filter(is_deleted=False).order_by("name")
         context["categories"] = categories
-        
+
         return context
+
+    def form_valid(self, form):
+        post = form.save(commit=False)
+        # Set published_status to None, which is considered as the pending status
+        post.published_status = None
+        post.save()
+
+        return super().form_valid(form)
+
 
 class AdminPostDetailView(DetailView):
     """
