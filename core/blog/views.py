@@ -8,7 +8,14 @@ from django.urls import reverse_lazy
 from django.db.models import Q, Count
 from django.db.models.query import QuerySet
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import View, ListView, DetailView, CreateView, DeleteView
+from django.views.generic import (
+    View,
+    ListView,
+    DetailView,
+    CreateView,
+    DeleteView,
+    UpdateView,
+)
 
 from rest_framework import status
 
@@ -103,6 +110,25 @@ class UserPostDeleteView(LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         return reverse_lazy("blog:user-posts")
 
+
+class UserPostEditView(LoginRequiredMixin, UpdateView):
+    """
+    Editing desired post which if it's owned by authenticated user
+    """
+
+    template_name = "blog/post_edit.html"
+    fields = ["image", "title", "content", "category", "published_at"]
+    success_url = reverse_lazy("blog:user-posts")
+
+    def get_queryset(self):
+        return BlogPostHandler.fetch_user_posts(self.request.user.id)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        categories = Category.objects.filter(is_deleted=False).order_by("name")
+        context["categories"] = categories
+        
+        return context
 
 class AdminPostDetailView(DetailView):
     """
