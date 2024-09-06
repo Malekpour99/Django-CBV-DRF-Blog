@@ -26,6 +26,11 @@ urlpatterns = [
         name="user-post-delete",
     ),
     path(
+        "blog/your-posts/<slug:slug>/edit/",
+        views.UserPostEditView.as_view(),
+        name="user-post-edit",
+    ),
+    path(
         "blog/admin/posts/<slug:slug>/",
         views.AdminPostDetailView.as_view(),
         name="admin-post-detail",
