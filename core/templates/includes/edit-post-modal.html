@@ -1,0 +1,39 @@
+<!-- Edit Post Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Edit Post</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to edit "<strong id="post-title"></strong>" blog post?
+                <p class="text-primary fw-medium m-0">
+                    This action will change the post publish status to <span class="text-warning fw-bold">pending</span>!
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form method="get" id="edit-form" action="">
+                    <button type="submit" class="btn btn-primary">Edit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Edit Post Modal Scripts -->
+<script>
+    const editModal = document.getElementById('editModal')
+      editModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget
+        const postTitle = button.getAttribute('data-post-title')
+        const postSlug = button.getAttribute('data-post-slug')
+        const modalPostTitle = editModal.querySelector('#post-title')
+        const editForm = editModal.querySelector('#edit-form')
+      
+        modalPostTitle.textContent = postTitle
+        editForm.action = "{% url 'blog:user-post-edit' slug=0 %}".replace('0', postSlug)
+      });
+</script>

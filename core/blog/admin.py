@@ -13,10 +13,11 @@ class PostAdmin(admin.ModelAdmin):
         "counted_views",
         "published_status",
         "created_at",
+        "is_deleted"
     )
     prepopulated_fields = {"slug": ("title",)}
-    list_filter = ("published_status", "author", "category")
-    search_fields = ["title", "content"]
+    list_filter = ("published_status", "author", "category", "is_deleted")
+    search_fields = ["title", "content", "author"]
 
 
 @admin.register(Category)
