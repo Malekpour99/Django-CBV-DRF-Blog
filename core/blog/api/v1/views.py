@@ -1,11 +1,13 @@
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .serializers import PostSerializer
+from blog.models import Category
+from blog.utils import BlogPostHandler
+from .serializers import PostSerializer, CategorySerializer
 from .permissions import IsAuthenticatedAuthor
 from .paginations import CustomDefaultPagination
-from blog.utils import BlogPostHandler
 
 
 class PostModelViewSet(viewsets.ModelViewSet):
@@ -32,3 +34,14 @@ class PostModelViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return BlogPostHandler.fetch_published_posts()
+
+
+class CategoryModelViewSet(viewsets.ModelViewSet):
+    """
+    Retrieving category and creating a category \n
+    Retrieving, Updating and Deleting a single category
+    """
+
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    serializer_class = CategorySerializer
+    queryset = Category.objects.all()
