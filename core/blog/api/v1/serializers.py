@@ -1,7 +1,13 @@
 from rest_framework import serializers
 
-from blog.models import Post
+from blog.models import Post, Category
 from accounts.models import Profile
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ["id", "name"]
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -43,6 +49,8 @@ class PostSerializer(serializers.ModelSerializer):
             rep.pop("absolute_url", None)
         else:
             rep.pop("content", None)
+
+        rep["category"] = CategorySerializer(instance.category).data
         return rep
 
     def create(self, validated_data):
