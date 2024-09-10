@@ -32,4 +32,19 @@ class Post(BaseModel):
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
+        """
+        providing a URL link for previewing posts from admin panel
+        """
         return reverse("blog:admin-post-detail", kwargs={"slug": self.slug})
+
+    def get_relative_api_url(self):
+        """
+        Providing a relative URL path for API response results
+        """
+        return self.get_absolute_url()
+
+    def get_content_snippet(self):
+        """
+        providing a snippet for blog post content
+        """
+        return self.content[0:40] + " ..."
