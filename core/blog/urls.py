@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 
 app_name = "blog"
@@ -42,4 +42,5 @@ urlpatterns = [
         views.CategoryPublishView.as_view(),
         name="category-publish",
     ),
+    path("blog/api/v1/", include("blog.api.v1.urls")),
 ]
