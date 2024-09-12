@@ -12,7 +12,7 @@ class Comment(BaseModel):
     )
     subject = models.CharField(max_length=255)
     message = models.TextField()
-    approved = models.BooleanField(default=False)
+    approved = models.BooleanField(blank=True, null=True)
 
     class Meta:
         ordering = ["-created_at"]
