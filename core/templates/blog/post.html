@@ -46,13 +46,21 @@
   </article>
   <!-- Post Content End -->
 
-  <!-- Post Comments -->
+  <!-- Comment Form -->
   {% if post.published_status %}
     {% include "comment/comment_form.html" %}
   {% endif %}
+  <!-- Comment Form End -->
+
+  
+  <!-- Post Comments -->
+  {% if post.published_status %}
+    <hr>
+    {% include "comment/comments_container.html" %}
+  {% endif %}
   <!-- Post Comments End -->
 
-  <hr class="my-3 mt-0">
+  <hr class="my-3">
   <div class="d-flex justify-content-center mb-4">
     <div class="d-block">
       {% if post.published_status %}
