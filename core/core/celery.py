@@ -1,8 +1,8 @@
 import os
 
 from celery import Celery
+from celery.schedules import crontab
 
-# from celery.schedules import crontab
 
 # Set the default Django settings module for the 'celery' program.
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
@@ -23,9 +23,11 @@ app.conf.enable_utc = False
 app.conf.timezone = "Asia/Tehran"
 
 # Celery Beat Configuration
-# app.conf.beat_schedule = {
-#     "beat_name": {
-#         "task": "app_name.tasks.task_name",
-#         "schedule": crontab(minute="*/10"),
-#     },
-# }
+app.conf.beat_schedule = {
+    "deactivate-old-users": {
+        "task": "accounts.tasks.deactivate_old_users",
+        "schedule": crontab(
+            hour=0, minute=0, day_of_week="mon"
+        ),  # runs weekly on monday midnight
+    },
+}
