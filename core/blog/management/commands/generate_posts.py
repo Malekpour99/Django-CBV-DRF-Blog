@@ -43,7 +43,7 @@ class Command(BaseCommand):
             Category.objects.get_or_create(name=category_name)
 
         categories = Category.objects.all()
-        
+
         # providing a list of default images for blog posts
         default_images = [f"default/default-post-{i}.png" for i in range(1, 11)]
 

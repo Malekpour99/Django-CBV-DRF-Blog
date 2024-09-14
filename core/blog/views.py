@@ -96,7 +96,7 @@ class PostDetailView(DetailView):
         post_comments = Comment.objects.filter(
             post__slug=self.kwargs.get("slug"), is_deleted=False, approved=True
         ).select_related("commenter")
-        
+
         context["comments"] = post_comments
         return context
 

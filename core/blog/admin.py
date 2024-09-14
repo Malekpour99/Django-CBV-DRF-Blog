@@ -13,7 +13,7 @@ class PostAdmin(admin.ModelAdmin):
         "counted_views",
         "published_status",
         "created_at",
-        "is_deleted"
+        "is_deleted",
     )
     prepopulated_fields = {"slug": ("title",)}
     list_filter = ("published_status", "author", "category", "is_deleted")
