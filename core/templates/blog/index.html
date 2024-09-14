@@ -73,8 +73,8 @@
           <div class="pagination">
             <span class="step-links">
               {% if page_obj.has_previous %}
-              <a class="btn btn-primary p-3 text-uppercase rounded-pill" href="?page=1">&laquo; first</a>
-              <a class="btn btn-primary p-3 text-uppercase rounded-pill me-2" href="?page={{ page_obj.previous_page_number }}">previous</a>
+              <a class="btn btn-primary p-2 px-3 text-uppercase rounded-pill" href="?page=1">&laquo; first</a>
+              <a class="btn btn-primary p-2 px-3 text-uppercase rounded-pill me-2" href="?page={{ page_obj.previous_page_number }}">previous</a>
               {% endif %}
               
               <span class="current">
@@ -82,8 +82,8 @@
               </span>
               
               {% if page_obj.has_next %}
-              <a class="btn btn-primary p-3 text-uppercase rounded-pill ms-2" href="?page={{ page_obj.next_page_number }}">next</a>
-              <a class="btn btn-primary p-3 text-uppercase rounded-pill" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+              <a class="btn btn-primary p-2 px-3 text-uppercase rounded-pill ms-2" href="?page={{ page_obj.next_page_number }}">next</a>
+              <a class="btn btn-primary p-2 px-3 text-uppercase rounded-pill" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
               {% endif %}
             </span>
           </div>
