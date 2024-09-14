@@ -42,6 +42,11 @@ def common_post(common_profile):
     )
 
 
+@pytest.fixture
+def common_category():
+    return Category.objects.create(name="Test Category")
+
+
 @pytest.mark.django_db
 class TestBlogPostAPI:
     """API tests for blog app posts"""
@@ -87,3 +92,52 @@ class TestBlogPostAPI:
         assert response.status_code == status.HTTP_204_NO_CONTENT
         assert Post.objects.get(id=common_post.id).is_deleted
 
+
+@pytest.mark.django_db
+class TestCategoryAPI:
+    """API tests for Category ModelViewSet"""
+
+    def test_list_categories(self, api_client, common_category):
+        url = reverse("blog:api-v1:category-list")
+        response = api_client.get(url)
+        assert response.status_code == status.HTTP_200_OK
+        results = response.data
+        assert len(results) > 0
+        assert results[0]["name"] == common_category.name
+
+    def test_retrieve_category(self, api_client, common_category):
+        url = reverse("blog:api-v1:category-detail", args=[common_category.id])
+        response = api_client.get(url)
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data["name"] == common_category.name
+
+    def test_create_category_authenticated(self, api_client, common_user):
+        api_client.force_authenticate(user=common_user)
+        url = reverse("blog:api-v1:category-list")
+        data = {"name": "New Category"}
+        response = api_client.post(url, data, format="json")
+        assert response.status_code == status.HTTP_201_CREATED
+        assert Category.objects.count() == 1
+        assert Category.objects.latest("id").name == "New Category".lower()
+
+    def test_create_category_unauthenticated(self, api_client):
+        url = reverse("blog:api-v1:category-list")
+        data = {"name": "New Category"}
+        response = api_client.post(url, data, format="json")
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_update_category(self, api_client, common_user, common_category):
+        api_client.force_authenticate(user=common_user)
+        url = reverse("blog:api-v1:category-detail", args=[common_category.id])
+        data = {"name": "Updated Category"}
+        response = api_client.put(url, data, format="json")
+        assert response.status_code == status.HTTP_200_OK
+        common_category.refresh_from_db()
+        assert common_category.name == "Updated Category".lower()
+
+    def test_delete_category(self, api_client, common_user, common_category):
+        api_client.force_authenticate(user=common_user)
+        url = reverse("blog:api-v1:category-detail", args=[common_category.id])
+        response = api_client.delete(url)
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+        assert Category.objects.get(id=common_category.id).is_deleted
