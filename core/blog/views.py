@@ -7,6 +7,8 @@ from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.db.models import Q, Count
 from django.db.models.query import QuerySet
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import (
     View,
@@ -32,6 +34,10 @@ class PostListView(ListView):
     template_name = "blog/index.html"
     context_object_name = "posts"
     paginate_by = 7
+
+    @method_decorator(cache_page(60 * 15))  # Cache for 15 minutes
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
     def get_queryset(self) -> QuerySet[Any]:
         posts = BlogPostHandler.fetch_published_posts()
