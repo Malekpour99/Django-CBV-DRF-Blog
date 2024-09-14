@@ -18,6 +18,9 @@ app.config_from_object("django.conf:settings", namespace="CELERY")
 # Load task modules from all registered Django apps.
 app.autodiscover_tasks()
 
+# Configure Celery to use Tehran time zone settings
+app.conf.enable_utc = False
+app.conf.timezone = "Asia/Tehran"
 
 # Celery Beat Configuration
 # app.conf.beat_schedule = {
