@@ -6,6 +6,6 @@ app_name = "comment"
 
 urlpatterns = [
     path(
-        "/post/<slug:slug>/", views.CommentCreateView.as_view(), name="create-comment"
+        "post/<slug:slug>/", views.CommentCreateView.as_view(), name="create-comment"
     ),
 ]
