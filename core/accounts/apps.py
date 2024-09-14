@@ -6,4 +6,5 @@ class AccountsConfig(AppConfig):
     name = "accounts"
 
     def ready(self):
-        import accounts.signals
+        # ignoring this line when checking files by flake8
+        import accounts.signals  # noqa: F401
