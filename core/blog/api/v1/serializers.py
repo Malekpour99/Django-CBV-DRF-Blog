@@ -33,7 +33,6 @@ class PostSerializer(serializers.ModelSerializer):
         read_only_fields = [
             "author",
             "published_status",
-            "published_at",
         ]
 
     def get_absolute_url(self, obj):
