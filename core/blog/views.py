@@ -21,6 +21,7 @@ from rest_framework import status
 
 from blog.models import Post, Category
 from blog.utils import BlogPostHandler
+from comment.models import Comment
 
 
 class PostListView(ListView):
@@ -83,6 +84,15 @@ class PostDetailView(DetailView):
 
     def get_queryset(self) -> QuerySet[Any]:
         return BlogPostHandler.fetch_published_posts()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        post_comments = Comment.objects.filter(
+            post__slug=self.kwargs.get("slug"), is_deleted=False, approved=True
+        ).select_related("commenter")
+        
+        context["comments"] = post_comments
+        return context
 
 
 class UserPostDetailView(DetailView):

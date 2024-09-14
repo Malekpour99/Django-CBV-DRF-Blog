@@ -1,0 +1,26 @@
+<hr class="my-2 mt-0">
+<div class="container px-4 px-lg-5 mb-3">
+  <div class="row gx-4 gx-lg-5 justify-content-center">
+    <div class="col-md-10 col-lg-8 col-xl-7">
+        <h4 class="my-2">Leave a Comment</h4>
+        {% if request.user.is_authenticated %}
+        <form class="form-control p-3" method="post" action="{% url 'comment:create-comment' slug=post.slug%}">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="comment-subject" class="form-label">Subject</label>
+            <input type="text" class="form-control" id="comment-subject" name="subject" required/>
+          </div>
+          <div class="mb-3">
+            <label for="comment-message" class="form-label">Message</label>
+            <textarea type="text" class="form-control" id="comment-message" name="message" style="height: 100px" required></textarea>
+          </div>
+          <div class="mb-3 d-flex justify-content-end">
+            <button class="btn btn-primary rounded-2" type="submit">Submit</button>
+          </div>
+        </form>
+        {% else %}
+        <p class="mt-1">Please <a href="{% url 'accounts:login' %}">Login</a> if you want to leave a comment.</p>
+        {% endif %}
+    </div>
+  </div>
+</div>

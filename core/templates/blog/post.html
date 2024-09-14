@@ -7,10 +7,16 @@
     <div class="container position-relative px-4 px-lg-5">
       <div class="row gx-4 gx-lg-5 justify-content-center">
         <div class="col-md-10 col-lg-8 col-xl-7">
+          {% if post.published_status %}
           <a href="{% url 'blog:index' %}" class="btn btn-outline-light mb-2 rounded">
             <i class="bi bi-arrow-left"></i> Return Home
           </a>
-          <img class="header-image" src="{{ post.image.url }}" alt="{{ post.title }}">
+          {% else %}
+          <a href="{% url 'blog:user-posts' %}" class="btn btn-outline-light mb-2 rounded">
+            <i class="bi bi-arrow-left"></i> Return to Your Posts
+          </a>
+          {% endif %}
+          <img class="header-image" src="{{ post.image.url }}" alt="{{ post.title }}" style="max-width: 870px; max-height: 550px;">
           <div class="post-heading">
             <h1>{{ post.title|title }}</h1>
             <span class="meta">
@@ -38,12 +44,34 @@
       </div>
     </div>
   </article>
-  <hr class="mb-4 mt-0">
+  <!-- Post Content End -->
+
+  <!-- Comment Form -->
+  {% if post.published_status %}
+    {% include "comment/comment_form.html" %}
+  {% endif %}
+  <!-- Comment Form End -->
+
+  
+  <!-- Post Comments -->
+  {% if post.published_status %}
+    <hr>
+    {% include "comment/comments_container.html" %}
+  {% endif %}
+  <!-- Post Comments End -->
+
+  <hr class="my-3">
   <div class="d-flex justify-content-center mb-4">
     <div class="d-block">
+      {% if post.published_status %}
       <a href="{% url 'blog:index' %}" class="btn btn-outline-primary rounded fs-5">
         <i class="bi bi-arrow-left"></i> Return Home
       </a>
+      {% else %}
+      <a href="{% url 'blog:user-posts' %}" class="btn btn-outline-primary rounded fs-5">
+        <i class="bi bi-arrow-left"></i> Return to Your Posts
+      </a>
+      {% endif %}
     </div>
   </div>
 {% endblock %}

@@ -1,0 +1,39 @@
+{% load static %}
+{% load humanize %}
+
+<div class="container px-4 px-lg-5 mb-2">
+  <div class="row text-center mb-2">
+    <h4>Comments</h4>
+  </div>
+
+  {% if comments %}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      {% for comment in comments %}
+        <div class="col">
+          <div class="card h-100">
+            <div class="card-header">
+              <img 
+                src="{{ comment.commenter.image.url }}" 
+                alt="{{ comment.commenter.username }}'s profile picture" 
+                class="rounded-circle me-2"
+                width="40" 
+                height="40">
+              <span>
+                {{ comment.commenter.username }}
+              </span>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">{{ comment.subject }}</h5>
+              <p class="card-text my-2">{{ comment.message }}</p>
+              <p class="card-text mt-2"><small class="text-body-secondary">{{ comment.updated_at|naturaltime }}</small></p>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="row text-center">
+      <p class="mb-2">No comments have been submitted for this post yet; be the first one to leave a comment!</p>
+    </div>
+  {% endif %}
+</div>
