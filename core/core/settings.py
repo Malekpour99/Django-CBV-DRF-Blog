@@ -99,24 +99,26 @@ WSGI_APPLICATION = "core.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 # Default sqlite database configuration
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": BASE_DIR / "db.sqlite3",
-#     }
-# }
-
-# PostgreSQL database configuration
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": config("DB_NAME", default="blog_db"),
-        "USER": config("DB_USER", default="blog_admin"),
-        "PASSWORD": config("DB_PASSWORD", default="blog_admin_password"),
-        "HOST": config("DB_HOST", default="postgres"),  # compose service name
-        "PORT": config("DB_PORT", cast=str, default="5432"),
+if not DEBUG:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
     }
-}
+
+else:
+    # PostgreSQL database configuration
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": config("DB_NAME", default="blog_db"),
+            "USER": config("DB_USER", default="blog_admin"),
+            "PASSWORD": config("DB_PASSWORD", default="blog_admin_password"),
+            "HOST": config("DB_HOST", default="postgres"),  # compose service name
+            "PORT": config("DB_PORT", cast=str, default="5432"),
+        }
+    }
 
 
 # Password validation
@@ -198,13 +200,14 @@ SIMPLE_JWT = {
 # Using console based Email, instead of Gmail SMTP Service
 # EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-# SMTP service configuration for sending emails
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp4dev"  # Docker compose service name (instead of 'localhost')
-EMAIL_PORT = 25
-EMAIL_USE_TLS = False
-EMAIL_HOST_USER = ""
-EMAIL_HOST_PASSWORD = ""
+if DEBUG:
+    # SMTP service configuration for sending emails
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_HOST = "smtp4dev"  # Docker compose service name (instead of 'localhost')
+    EMAIL_PORT = 25
+    EMAIL_USE_TLS = False
+    EMAIL_HOST_USER = ""
+    EMAIL_HOST_PASSWORD = ""
 
 # Celery Configuration
 CELERY_BROKER_URL = "redis://redis:6379/1"
